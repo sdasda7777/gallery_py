@@ -179,17 +179,17 @@ let sortType = document.getElementById("sort-combo").value;
 itemsArr.sort(function(a, b) {  
   switch(sortType){
   	case "1":
-  		return a.getAttribute("sort-info-date") < b.getAttribute("sort-info-date");
+  		return (a.getAttribute("sort-info-date") < b.getAttribute("sort-info-date") ? 1 : -1);
   	case "2":
-  		return a.getAttribute("sort-info-date") > b.getAttribute("sort-info-date");
+  		return (a.getAttribute("sort-info-date") > b.getAttribute("sort-info-date") ? 1 : -1);
   	case "3":
-	  	return parseInt(a.getAttribute("sort-info-size")) > parseInt(b.getAttribute("sort-info-size"));
+	  	return (parseInt(a.getAttribute("sort-info-size")) > parseInt(b.getAttribute("sort-info-size")) ? 1 : -1);
   	case "4":
-	  	return parseInt(a.getAttribute("sort-info-size")) < parseInt(b.getAttribute("sort-info-size"));
+	  	return (parseInt(a.getAttribute("sort-info-size")) < parseInt(b.getAttribute("sort-info-size")) ? 1 : -1);
   	case "5":
-	  	return a.getAttribute("sort-info-name").toLowerCase() > b.getAttribute("sort-info-name").toLowerCase();
+	  	return (a.getAttribute("sort-info-name").toLowerCase() > b.getAttribute("sort-info-name").toLowerCase() ? 1 : -1);
   	case "6":
-	  	return a.getAttribute("sort-info-name").toLowerCase() < b.getAttribute("sort-info-name").toLowerCase();
+	  	return (a.getAttribute("sort-info-name").toLowerCase() < b.getAttribute("sort-info-name").toLowerCase() ? 1 : -1);
 	default:
 		return false;
   }
