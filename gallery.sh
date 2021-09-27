@@ -175,11 +175,8 @@ for (let i in items) {
     }
 }
 
-itemsArr.sort(function(a, b) {
-  let sortType = document.getElementById("sort-combo").value;
-  
-  console.log(sortType);
-  
+let sortType = document.getElementById("sort-combo").value;
+itemsArr.sort(function(a, b) {  
   switch(sortType){
   	case "1":
   		return a.getAttribute("sort-info-date") < b.getAttribute("sort-info-date");
@@ -196,11 +193,6 @@ itemsArr.sort(function(a, b) {
 	default:
 		return false;
   }
-  
-  
-  return a.innerHTML == b.innerHTML
-          ? 0
-          : (a.innerHTML > b.innerHTML ? 1 : -1);
 });
 
 for (i = 0; i < itemsArr.length; ++i) {
