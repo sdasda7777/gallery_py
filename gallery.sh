@@ -197,7 +197,11 @@ itemsArr.sort(function(a, b) {
 
 for (i = 0; i < itemsArr.length; ++i) {
   list.appendChild(itemsArr[i]);
-}}</script>' >> "$MY_INDEX_HTML_FILE"
+}}
+
+document.getElementById("sort-combo").value = "1";
+sortPictures();
+</script>' >> "$MY_INDEX_HTML_FILE"
 
 ## Generate the HTML Files for Images in thumbdir
 MY_FILE=0
