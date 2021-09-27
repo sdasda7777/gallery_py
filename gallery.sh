@@ -116,6 +116,15 @@ cat > "$MY_INDEX_HTML_FILE" << EOF
 			<a href="#" class="navbar-brand">
 				<strong>$MY_TITLE</strong>
 			</a>
+			
+			<select onchange="sortPictures()" id="sort-combo">
+				<option value="1">Date, descending
+				<option value="2">Date, ascending
+				<option value="3">Size, ascending
+				<option value="4">Size, descending
+				<option value="5">Name, ascending
+				<option value="6">Name, descending
+			</select>
 		</div>
 	</div>
 </header>
@@ -125,10 +134,13 @@ EOF
 ### Photos (JPG)
 if [[ $(find . -maxdepth 1 -type f -iname \*.jpg | wc -l) -gt 0 ]]; then
 
-echo '<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 py-5">' >> "$MY_INDEX_HTML_FILE"
+echo '<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 py-5" id="thumbnail-container">' >> "$MY_INDEX_HTML_FILE"
 ## Generate Images
 MY_NUM_FILES=0
-for MY_FILENAME in *.[jJ][pP][gG]; do
+shopt -s lastpipe
+
+find -maxdepth 0 -type f -print0 | xargs -0 ls -t *.[jJ][pP][gG] | while read MY_FILENAME
+do
 	MY_FILELIST[$MY_NUM_FILES]=$MY_FILENAME
 	(( MY_NUM_FILES++ ))
 	for MY_RES in ${MY_HEIGHTS[*]}; do
@@ -137,19 +149,68 @@ for MY_FILENAME in *.[jJ][pP][gG]; do
 			$MY_CONVERT_COMMAND -auto-orient -strip -quality $MY_QUALITY -resize x$MY_RES "$MY_FILENAME" "$MY_THUMBDIR/$MY_RES/$MY_FILENAME"
 		fi
 	done
+	
+IFS=$'\n';
+MY_EXIF_DATA_FOR_SORTING=($($MY_EXIF_COMMAND "$MY_FILENAME"));
+unset IFS;
+
 	cat >> "$MY_INDEX_HTML_FILE" << EOF
-<div class="col">
+
+<div class="col" sort-info-date="$(cut -c 16- <<< ${MY_EXIF_DATA_FOR_SORTING[2]})" sort-info-size="$(cut -c 16- <<< ${MY_EXIF_DATA_FOR_SORTING[1]::-6})" sort-info-name="$MY_FILENAME">
 	<p>
 		<a href="$MY_THUMBDIR/$MY_FILENAME.html"><img src="$MY_THUMBDIR/$MY_HEIGHT_SMALL/$MY_FILENAME" alt="Thumbnail: $MY_FILENAME" class="rounded mx-auto d-block"></a>
 	</p>
 </div>
 EOF
 done
-echo '</div>' >> "$MY_INDEX_HTML_FILE"
+echo '</div><script>
+function sortPictures(){
+let list = document.getElementById("thumbnail-container");
+
+let items = list.childNodes;
+let itemsArr = [];
+for (let i in items) {
+    if (items[i].nodeType == 1) { // get rid of the whitespace text nodes
+        itemsArr.push(items[i]);
+    }
+}
+
+itemsArr.sort(function(a, b) {
+  let sortType = document.getElementById("sort-combo").value;
+  
+  console.log(sortType);
+  
+  switch(sortType){
+  	case "1":
+  		return a.getAttribute("sort-info-date") < b.getAttribute("sort-info-date");
+  	case "2":
+  		return a.getAttribute("sort-info-date") > b.getAttribute("sort-info-date");
+  	case "3":
+	  	return parseInt(a.getAttribute("sort-info-size")) > parseInt(b.getAttribute("sort-info-size"));
+  	case "4":
+	  	return parseInt(a.getAttribute("sort-info-size")) < parseInt(b.getAttribute("sort-info-size"));
+  	case "5":
+	  	return a.getAttribute("sort-info-name").toLowerCase() > b.getAttribute("sort-info-name").toLowerCase();
+  	case "6":
+	  	return a.getAttribute("sort-info-name").toLowerCase() < b.getAttribute("sort-info-name").toLowerCase();
+	default:
+		return false;
+  }
+  
+  
+  return a.innerHTML == b.innerHTML
+          ? 0
+          : (a.innerHTML > b.innerHTML ? 1 : -1);
+});
+
+for (i = 0; i < itemsArr.length; ++i) {
+  list.appendChild(itemsArr[i]);
+}}</script>' >> "$MY_INDEX_HTML_FILE"
 
 ## Generate the HTML Files for Images in thumbdir
 MY_FILE=0
 while [[ $MY_FILE -lt $MY_NUM_FILES ]]; do
+
 	MY_FILENAME=${MY_FILELIST[$MY_FILE]}
 	MY_PREV=""
 	MY_NEXT=""
