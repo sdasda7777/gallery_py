@@ -199,7 +199,6 @@ for (i = 0; i < itemsArr.length; ++i) {
   list.appendChild(itemsArr[i]);
 }}
 
-document.getElementById("sort-combo").value = "1";
 sortPictures();
 </script>' >> "$MY_INDEX_HTML_FILE"
 
