@@ -1,4 +1,4 @@
-# gallery.sh
+# gallery.py
 
 [![Build Status](https://travis-ci.org/Cyclenerd/gallery_shell.svg?branch=master)](https://travis-ci.org/Cyclenerd/gallery_shell)
 
