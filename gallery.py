@@ -136,11 +136,12 @@ if len(jpgs) > 0:
 				subprocess.run((MY_CONVERT_COMMAND+" -auto-orient -strip -quality "+str(MY_QUALITY)+" -resize x"+str(MY_RES)+" "+MY_FILENAME
 				+" "+MY_THUMBDIR+"/"+str(MY_RES)+"/"+MY_FILENAME).split())
 		
-		MY_EXIF_INFO=subprocess.check_output([MY_EXIF_COMMAND, MY_FILENAME]).decode("utf-8").split("\n")
+		MY_EXIF_INFO=subprocess.check_output([MY_EXIF_COMMAND, MY_FILENAME]).decode("utf-8")
+		exifInfoForSorting = MY_EXIF_INFO.split("\n")
 		
-		jpgsByName.append((MY_FILENAME, MY_EXIF_INFO[0][15:]))
-		jpgsBySize.append((MY_FILENAME, int(MY_EXIF_INFO[1][15:-6])))
-		jpgsByDate.append((MY_FILENAME, MY_EXIF_INFO[2][15:]))		
+		jpgsByName.append((MY_FILENAME, exifInfoForSorting[0][15:]))
+		jpgsBySize.append((MY_FILENAME, int(exifInfoForSorting[1][15:-6])))
+		jpgsByDate.append((MY_FILENAME, exifInfoForSorting[2][15:]))		
 
 	jpgsByName.sort(key=lambda y: y[1].lower())
 	jpgsBySize.sort(key=lambda y: y[1])
@@ -230,8 +231,8 @@ if len(jpgs) > 0:
 		</div>")
 
 		# EXIF
-		#if len(MY_EXIF_INFO) > 0:
-			#imageHTMLFile.write("<div class=\"row\"><div class=\"col\"><pre>"+MY_EXIF_INFO+"</pre></div></div>")
+		if len(MY_EXIF_INFO) > 0:
+			imageHTMLFile.write("<div class=\"row\"><div class=\"col\"><pre>"+MY_EXIF_INFO+"</pre></div></div>")
 
 		# Footer
 		imageHTMLFile.write(
