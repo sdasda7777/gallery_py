@@ -10,7 +10,7 @@ Python Script to generate static web galleries. No server-side programs (i.e. PH
 It requires no special server-side script to run to view image galleries because everything is pre-rendered. 
 
 It offers several features:
-* Responsive layout
+* Somewhat responsive layout
 * Thumbnails which fill the browser efficiently
 * Download the original image file
 * Nice and simple Bootstrap CSS layout
