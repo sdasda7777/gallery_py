@@ -154,7 +154,7 @@ if len(jpgs) > 0:
 		
 		indexHTMLFile.write(
 		"<div class=\"col\" sort-info-name=\""+str(name)+"\" sort-info-size=\""+str(size)+"\" sort-info-date=\""+str(date)+"\"><p>\n\
-		<a href=\""+MY_THUMBDIR+"/"+MY_FILENAME+".html\"><img src=\""+MY_THUMBDIR+"/"+str(MY_HEIGHT_SMALL)+"/"+MY_FILENAME+"\" alt=\"Thumbnail: "+MY_FILENAME+"\" class=\"rounded mx-auto d-block\"></a>\n</p></div>\n")
+		<a href=\""+MY_THUMBDIR+"/"+MY_FILENAME+".html\"><img src=\""+MY_THUMBDIR+"/"+str(MY_HEIGHT_SMALL)+"/"+MY_FILENAME+"\" alt=\"Thumbnail: "+MY_FILENAME+"\" class=\"rounded mx-auto d-block\" style=\"width: 100%;\"></a>\n</p></div>\n")
 		
 		prevByName=""
 		nextByName=""
